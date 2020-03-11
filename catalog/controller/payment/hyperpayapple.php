@@ -55,11 +55,6 @@ class ControllerPaymentHyperpayapple extends Controller
             "&paymentType=$type" .
             "&merchantTransactionId=$transactionID" .
             "&customer.email=$email";
-        $datacontent .= '&customParameters[branch_id]=1';
-        $datacontent .= '&customParameters[teller_id]=1';
-        $datacontent .= '&customParameters[device_id]=1';
-        $datacontent .= '&customParameters[bill_number]=' . $transactionID;
-        $datacontent .= '&customParameters[locale]=' . $this->session->data['language'];
 
 
         $firstNameBilling = preg_replace('/\s/', '', str_replace("&", "", $firstName));
