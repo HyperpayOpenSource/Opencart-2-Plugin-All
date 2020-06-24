@@ -10,6 +10,14 @@
         paymentTarget: "_top",
         locale: "<?php echo $language_code ?>",
         onReady: function(){
+
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-qrcode').hide();
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile').hide();
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-group-paymentMode').hide();
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-group-mobilePhone').show();
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile .wpwl-control-radio-mobile').attr('checked',true);
+            $('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile .wpwl-control-radio-mobile').trigger('click');
+
         }
     }
 </script>

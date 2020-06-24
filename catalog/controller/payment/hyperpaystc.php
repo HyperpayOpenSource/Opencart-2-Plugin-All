@@ -1,6 +1,6 @@
 <?php
 
-class ControllerPaymentHyperpay extends Controller
+class ControllerPaymentHyperpaystc extends Controller
 {
 
     public function index()
@@ -11,7 +11,7 @@ class ControllerPaymentHyperpay extends Controller
 
         $data['button_confirm'] = $this->language->get('button_confirm');
         //--------------------------------------
-        $testMode = $this->config->get('hyperpay_testmode');
+        $testMode = $this->config->get('hyperpaystc_testmode');
         if ($testMode == 0) {
             $scriptURL = "https://oppwa.com/v1/paymentWidgets.js?checkoutId=";
             $url = "https://oppwa.com/v1/checkouts";
@@ -26,12 +26,12 @@ class ControllerPaymentHyperpay extends Controller
         $orderid = $this->session->data['order_id'];
 
 
-        $channel = $this->config->get('hyperpay_channel');
-        $mode = $this->config->get('hyperpay_trans_mode');
-        $accessToken = $this->config->get('hyperpay_access_token');
-        //$pwd = $this->config->get('hyperpay_password');
-        $type = $this->config->get('hyperpay_trans_type');
-        $connector = $this->config->get('hyperpay_connector');
+        $channel = $this->config->get('hyperpaystc_channel');
+        $mode = $this->config->get('hyperpaystc_trans_mode');
+        $accessToken = $this->config->get('hyperpaystc_access_token');
+        //$pwd = $this->config->get('hyperpaystc_password');
+        $type = $this->config->get('hyperpaystc_trans_type');
+        $connector = $this->config->get('hyperpaystc_connector');
         $amount = number_format(round($orderAmount, 2), 2, '.', '');
         $currency = $order_info['currency_code'];
         $transactionID = $orderid;
@@ -115,13 +115,13 @@ class ControllerPaymentHyperpay extends Controller
             $token = $result->id;
         }
 
-        $payment_brands = implode(' ', $this->config->get('hyperpay_brands'));
+        $payment_brands = implode(' ', $this->config->get('hyperpaystc_brands'));
         //--------------------------------------
         $data['token'] = $token;
         $data['payment_brands'] = $payment_brands;
         $data['scriptURL'] = $scriptURL . $token;
 
-        $data['formStyle'] = $this->config->get('hyperpay_payment_style');
+        $data['formStyle'] = $this->config->get('hyperpaystc_payment_style');
         $data['language_code'] = $this->session->data['language'];
 
         $http = explode(':', $this->url->link('checkout/success'));
@@ -129,13 +129,13 @@ class ControllerPaymentHyperpay extends Controller
         if ($http[0] == 'https') {
             $url = HTTPS_SERVER;
         }
-        $data['postbackURL'] = $url . 'index.php?route=payment/hyperpay/callback';
+        $data['postbackURL'] = $url . 'index.php?route=payment/hyperpaystc/callback';
 
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/hyperpay.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/hyperpay.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/hyperpaystc.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/payment/hyperpaystc.tpl', $data);
         } else {
-            return $this->load->view('default/template/payment/hyperpay.tpl', $data);
+            return $this->load->view('default/template/payment/hyperpaystc.tpl', $data);
         }
     }
 
@@ -145,9 +145,9 @@ class ControllerPaymentHyperpay extends Controller
             $this->load->model('checkout/order');
 
             $token = $_GET["id"];
-            $accessToken = $this->config->get('hyperpay_access_token');
+            $accessToken = $this->config->get('hyperpaystc_access_token');
 
-            $testMode = $this->config->get('hyperpay_testmode');
+            $testMode = $this->config->get('hyperpaystc_testmode');
 
             if ($testMode == 0) {
                 $url = "https://oppwa.com/v1/checkouts/$token/payment";
@@ -155,7 +155,7 @@ class ControllerPaymentHyperpay extends Controller
                 $url = "https://test.oppwa.com/v1/checkouts/$token/payment";
             }
 
-            $url .= "?entityId=" . $this->config->get('hyperpay_channel');
+            $url .= "?entityId=" . $this->config->get('hyperpaystc_channel');
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -193,18 +193,18 @@ class ControllerPaymentHyperpay extends Controller
                 if ($success == 1) {
                     // Order is accepted.
                     $transUniqueID = $resultJson->id;
-                    $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpay_order_status_id'), "Trans Unique ID:$transUniqueID\n", TRUE);
+                    $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpaystc_order_status_id'), "Trans Unique ID:$transUniqueID\n", TRUE);
                     $this->success();
                 } else {
                     // Order is not approved.
-                    $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpay_order_status_failed_id'), '', TRUE);
+                    $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpaystc_order_status_failed_id'), '', TRUE);
                     $this->log->write("Hyperpay: Unauthorized Transaction. Transaction Failed. $failed_msg . Order Id: $orderid");
-                    $this->session->data['hyperpay_error'] = $failed_msg;
-                    $this->response->redirect($this->url->link('payment/hyperpay/fail', '', 'SSL'));
+                    $this->session->data['hyperpaystc_error'] = $failed_msg;
+                    $this->response->redirect($this->url->link('payment/hyperpaystc/fail', '', 'SSL'));
                 }
                 exit;
             } else {
-                if ($this->config->get('hyperpay_mailerrors') == 1) {
+                if ($this->config->get('hyperpaystc_mailerrors') == 1) {
                     $message = "Hello,\n\nThis is your OpenCart site at " . $this->url->link('common/home') . ".\n\n";
                     $message .= "I've received this callback from Hyperpay, and I couldn't approve it.\n\n";
                     $message .= "This is the failed message that were sent from Hyperpay: $failed_msg.\n\n";
@@ -214,10 +214,10 @@ class ControllerPaymentHyperpay extends Controller
                     $this->sendEmail($this->config->get('config_email'), 'Hyperpay callback failed!', $message);
                 }
 
-                //$this->model_checkout_order->confirm($orderid, $this->config->get('hyperpay_order_status_failed_id'), '', TRUE);
-                $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpay_order_status_failed_id'), '', TRUE);
+                //$this->model_checkout_order->confirm($orderid, $this->config->get('hyperpaystc_order_status_failed_id'), '', TRUE);
+                $this->model_checkout_order->addOrderHistory($orderid, $this->config->get('hyperpaystc_order_status_failed_id'), '', TRUE);
                 $this->log->write("Hyperpay: Unauthorized Transaction. Transaction Failed. $failed_msg. Order Id: $orderid");
-                $this->response->redirect($this->url->link('payment/hyperpay/fail', '', 'SSL'));
+                $this->response->redirect($this->url->link('payment/hyperpaystc/fail', '', 'SSL'));
                 print 'fff';
                 exit;
             }
@@ -256,11 +256,11 @@ class ControllerPaymentHyperpay extends Controller
 
     public function fail()
     {
-        $this->language->load('payment/hyperpay');
-        $data['heading_title'] = $this->config->get('hyperpay_heading_title');
+        $this->language->load('payment/hyperpaystc');
+        $data['heading_title'] = $this->config->get('hyperpaystc_heading_title');
 
-        if (isset($this->session->data['hyperpay_error'])) {
-            $data['general_error'] = $this->session->data['hyperpay_error'];
+        if (isset($this->session->data['hyperpaystc_error'])) {
+            $data['general_error'] = $this->session->data['hyperpaystc_error'];
         } else {
             $data['general_error'] = $this->language->get('general_error');;
         }
