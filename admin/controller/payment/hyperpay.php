@@ -260,8 +260,6 @@ class ControllerPaymentHyperpay extends Controller
             'MASTER' => 'Master Card',
             'DISCOVER' => 'Discover',
             'AMEX' => 'American Express',
-            'STC_PAY' => 'STCPay'
-
         );
 
         return $hyperpay_payments;
