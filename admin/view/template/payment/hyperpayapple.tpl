@@ -149,6 +149,29 @@
                             ?>
                         </div>
                     </div>
+
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-supported-networks"><?php echo $entry_supported_networks; ?></label>
+                        <div class="col-sm-10">
+                            <?php
+                            $i = 1;
+                            foreach ($entry_all_supported_networks as $payment => $name) {
+                                ?>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="hyperpayapple_supported_networks[]" value="<?php echo $payment; ?>"
+                                    <?php echo (is_array($hyperpayapple_supported_networks) && in_array($payment, $hyperpayapple_supported_networks)) ? 'checked="checked"' : ''; ?> />
+                                <?php echo $name; ?>
+                            </label>
+                            <?php
+                                if ($i % 2 == 0) {
+                                    echo '</tr><tr>';
+                                }
+                                $i++;
+                            }
+                            ?>
+                        </div>
+                    </div>
+
                     <div class="form-group required">
                         <label class="col-sm-2 control-label"
                             for="input-style"><?php echo $entry_payment_style; ?></label>

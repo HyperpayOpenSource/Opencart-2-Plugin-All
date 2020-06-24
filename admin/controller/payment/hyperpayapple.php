@@ -105,6 +105,9 @@ class ControllerPaymentHyperpayapple extends Controller
         $data['entry_brands'] = $this->language->get('entry_brands');
         $data['entry_all_brands'] = $this->get_hyperpayapple_payment_methods();
 
+        $data['entry_supported_networks'] = $this->language->get('entry_supported_networks');
+        $data['entry_all_supported_networks'] = $this->get_hyperpayapple_supported_networks();
+
         $data['entry_payment_style'] = $this->language->get('Payment Style');
         $data['entry_all_payment_style'] = $this->get_hyperpayapple_payment_style();
 
@@ -165,6 +168,12 @@ class ControllerPaymentHyperpayapple extends Controller
             $data['hyperpayapple_brands'] = $this->request->post['hyperpayapple_brands'];
         } else {
             $data['hyperpayapple_brands'] = $this->config->get('hyperpayapple_brands');
+        }
+
+        if (isset($this->request->post['hyperpayapple_supported_networks'])) {
+            $data['hyperpayapple_supported_networks'] = $this->request->post['hyperpayapple_supported_networks'];
+        } else {
+            $data['hyperpayapple_supported_networks'] = $this->config->get('hyperpayapple_supported_networks');
         }
 
         if (isset($this->request->post['hyperpayapple_payment_style'])) {
@@ -261,6 +270,17 @@ class ControllerPaymentHyperpayapple extends Controller
         return $hyperpayapple_payments;
     }
 
+    function get_hyperpayapple_supported_networks()
+    {
+        $hyperpayApplePay_supported_networks = array(
+            "amex" => "Amex",
+            "masterCard" => "MasterCard",
+            "visa" => "Visa",
+            "mada" => "Mada"
+        );
+
+        return $hyperpayApplePay_supported_networks;
+    }
 
     private function get_hyperpayapple_trans_mode()
     {
